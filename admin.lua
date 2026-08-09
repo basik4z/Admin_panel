@@ -1,5 +1,5 @@
--- MOD MENU - РАБОЧАЯ ВЕРСИЯ С КНОПКАМИ
--- Все команды из вашего макета превращены в кнопки
+-- MOD MENU - ГАРАНТИРОВАННО РАБОТАЕТ
+-- Все команды превращены в кнопки
 
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
@@ -52,7 +52,6 @@ local function GetRole(player)
     return "Невиновный"
 end
 
--- === ПОИСК УБИЙЦЫ ===
 local function FindKiller()
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Player then
@@ -62,7 +61,6 @@ local function FindKiller()
     return nil
 end
 
--- === УБИТЬ УБИЙЦУ ===
 local function KillKiller()
     local killer = FindKiller()
     if killer and killer.Character and killer.Character:FindFirstChild("Humanoid") then
@@ -73,30 +71,25 @@ local function KillKiller()
     end
 end
 
--- === ФЛИНГ ===
 local function FlingPlayer(target)
     if not target or not target.Character then return end
     local root = target.Character:FindFirstChild("HumanoidRootPart")
     if not root then return end
-    
     local vel = Instance.new("BodyVelocity")
     vel.MaxForce = Vector3.new(1, 1, 1) * 999999
     vel.Velocity = Vector3.new(math.random(-500, 500), math.random(300, 800), math.random(-500, 500))
     vel.Parent = root
-    
     task.wait(0.1)
     local vel2 = Instance.new("BodyVelocity")
     vel2.MaxForce = Vector3.new(1, 1, 1) * 999999
     vel2.Velocity = Vector3.new(math.random(-800, 800), math.random(500, 1000), math.random(-800, 800))
     vel2.Parent = root
-    
     task.wait(2)
     vel:Destroy()
     vel2:Destroy()
     Notify("🌸 " .. target.Name .. " улетел(а)!", 2)
 end
 
--- === ВСЕЛЕНИЕ ===
 local function PossessPlayer(target)
     if not target or not target.Character then return end
     Notify("🌸 Вселение в " .. target.Name .. " на 5 секунд", 2)
@@ -111,7 +104,6 @@ local function PossessPlayer(target)
     end
 end
 
--- === СОЗДАНИЕ ESP ===
 local function CreateESP(player)
     if espBoxes[player] then return end
     local role = GetRole(player)
@@ -119,7 +111,6 @@ local function CreateESP(player)
     if role == "Убийца" then color = Color3.new(1, 0.2, 0.2)
     elseif role == "Шериф" then color = Color3.new(0.2, 0.4, 1)
     elseif role == "Невиновный" then color = Color3.new(0.2, 1, 0.2) end
-    
     local box = Instance.new("BoxHandleAdornment")
     box.Size = Vector3.new(4, 6, 2)
     box.Color3 = color
@@ -128,13 +119,11 @@ local function CreateESP(player)
     box.AlwaysOnTop = true
     box.Adornee = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
     box.Parent = player.Character or player
-    
     local nameTag = Instance.new("BillboardGui")
     nameTag.Size = UDim2.new(0, 250, 0, 60)
     nameTag.Adornee = player.Character and player.Character:FindFirstChild("Head")
     nameTag.StudsOffset = Vector3.new(0, 3.5, 0)
     nameTag.Parent = player.Character or player
-    
     local label = Instance.new("TextLabel")
     label.Size = UDim2.new(1, 0, 1, 0)
     label.BackgroundTransparency = 1
@@ -143,11 +132,9 @@ local function CreateESP(player)
     label.TextStrokeTransparency = 0
     label.TextScaled = true
     label.Parent = nameTag
-    
     espBoxes[player] = {box, nameTag}
 end
 
--- === ПОИСК МОНЕТ ===
 local function FindCoins()
     local coins = {}
     for _, obj in pairs(Workspace:GetDescendants()) do
@@ -165,11 +152,9 @@ local function FarmCoins()
     if not autoFarmCoins then return end
     local coins = FindCoins()
     if #coins == 0 then return end
-    
     table.sort(coins, function(a, b)
         return (a.Position - RootPart.Position).Magnitude < (b.Position - RootPart.Position).Magnitude
     end)
-    
     for i = 1, math.min(5, #coins) do
         local coin = coins[i]
         if coin and coin.Parent then
@@ -185,7 +170,7 @@ ScreenGui.Name = "ModMenuGUI"
 ScreenGui.Parent = Player.PlayerGui
 ScreenGui.ResetOnSpawn = false
 
--- === ПЛАВАЮЩАЯ КНОПКА ===
+-- ПЛАВАЮЩАЯ КНОПКА
 local FloatingButton = Instance.new("TextButton")
 FloatingButton.Name = "FloatingButton"
 FloatingButton.Size = UDim2.new(0, 55, 0, 55)
@@ -197,12 +182,11 @@ FloatingButton.TextColor3 = Color3.new(1, 1, 1)
 FloatingButton.TextSize = 28
 FloatingButton.Font = Enum.Font.GothamBold
 FloatingButton.Parent = ScreenGui
-
 local FloatCorner = Instance.new("UICorner")
 FloatCorner.CornerRadius = UDim.new(0, 27)
 FloatCorner.Parent = FloatingButton
 
--- === ГЛАВНОЕ ОКНО ===
+-- ГЛАВНОЕ ОКНО
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
 MainFrame.Size = UDim2.new(0, 350, 0, 460)
@@ -213,22 +197,19 @@ MainFrame.BorderSizePixel = 2
 MainFrame.BorderColor3 = Color3.new(1, 0.6, 0.7)
 MainFrame.Visible = false
 MainFrame.Parent = ScreenGui
-
 local MainCorner = Instance.new("UICorner")
 MainCorner.CornerRadius = UDim.new(0, 16)
 MainCorner.Parent = MainFrame
 
--- === ЗАГОЛОВОК ===
+-- ЗАГОЛОВОК
 local TitleBar = Instance.new("Frame")
 TitleBar.Size = UDim2.new(1, 0, 0, 55)
 TitleBar.BackgroundColor3 = Color3.new(1, 0.8, 0.85)
 TitleBar.BackgroundTransparency = 0.15
 TitleBar.Parent = MainFrame
-
 local TitleCorner = Instance.new("UICorner")
 TitleCorner.CornerRadius = UDim.new(0, 16)
 TitleCorner.Parent = TitleBar
-
 local TitleLabel = Instance.new("TextLabel")
 TitleLabel.Size = UDim2.new(1, 0, 0.6, 0)
 TitleLabel.Position = UDim2.new(0, 0, 0, 8)
@@ -238,7 +219,6 @@ TitleLabel.TextColor3 = Color3.new(0.8, 0.3, 0.5)
 TitleLabel.TextSize = 22
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.Parent = TitleBar
-
 local SubLabel = Instance.new("TextLabel")
 SubLabel.Size = UDim2.new(1, 0, 0.4, 0)
 SubLabel.Position = UDim2.new(0, 0, 0, 32)
@@ -249,7 +229,7 @@ SubLabel.TextSize = 12
 SubLabel.Font = Enum.Font.GothamMedium
 SubLabel.Parent = TitleBar
 
--- Кнопка закрытия
+-- КНОПКА ЗАКРЫТИЯ
 local CloseBtn = Instance.new("TextButton")
 CloseBtn.Size = UDim2.new(0, 30, 0, 30)
 CloseBtn.Position = UDim2.new(1, -38, 0, 12)
@@ -260,22 +240,20 @@ CloseBtn.TextColor3 = Color3.new(1, 1, 1)
 CloseBtn.TextSize = 16
 CloseBtn.Font = Enum.Font.GothamBold
 CloseBtn.Parent = TitleBar
-
 local CloseCorner = Instance.new("UICorner")
 CloseCorner.CornerRadius = UDim.new(0, 8)
 CloseCorner.Parent = CloseBtn
-
 CloseBtn.MouseButton1Click:Connect(function()
     MainFrame.Visible = false
     FloatingButton.Visible = true
 end)
 
--- === КОНТЕЙНЕР ДЛЯ КНОПОК ===
+-- КОНТЕЙНЕР ДЛЯ КНОПОК (СКРОЛЛ)
 local ScrollFrame = Instance.new("ScrollingFrame")
 ScrollFrame.Size = UDim2.new(1, -10, 1, -60)
 ScrollFrame.Position = UDim2.new(0, 5, 0, 60)
 ScrollFrame.BackgroundTransparency = 1
-ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 800)
+ScrollFrame.CanvasSize = UDim2.new(0, 0, 0, 1000)
 ScrollFrame.ScrollBarThickness = 4
 ScrollFrame.ScrollBarImageColor3 = Color3.new(1, 0.6, 0.7)
 ScrollFrame.Parent = MainFrame
@@ -286,9 +264,8 @@ UIListLayout.FillDirection = Enum.FillDirection.Vertical
 UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 UIListLayout.Parent = ScrollFrame
 
--- === ФУНКЦИИ СОЗДАНИЯ КНОПОК ===
+-- === ФУНКЦИИ ДЛЯ СОЗДАНИЯ КНОПОК ===
 
--- Заголовок раздела
 local function CreateSection(text)
     local Section = Instance.new("TextLabel")
     Section.Size = UDim2.new(1, -10, 0, 28)
@@ -300,13 +277,11 @@ local function CreateSection(text)
     Section.Font = Enum.Font.GothamBold
     Section.TextXAlignment = Enum.TextXAlignment.Left
     Section.Parent = ScrollFrame
-    
     local SecCorner = Instance.new("UICorner")
     SecCorner.CornerRadius = UDim.new(0, 6)
     SecCorner.Parent = Section
 end
 
--- Кнопка-действие
 local function CreateActionButton(text, callback)
     local Button = Instance.new("TextButton")
     Button.Size = UDim2.new(1, -10, 0, 34)
@@ -318,27 +293,22 @@ local function CreateActionButton(text, callback)
     Button.TextXAlignment = Enum.TextXAlignment.Left
     Button.Font = Enum.Font.GothamMedium
     Button.Parent = ScrollFrame
-    
     local BtnCorner = Instance.new("UICorner")
     BtnCorner.CornerRadius = UDim.new(0, 8)
     BtnCorner.Parent = Button
-    
     Button.MouseButton1Click:Connect(callback)
     return Button
 end
 
--- Кнопка-переключатель (ON/OFF)
 local function CreateToggleButton(text, callback)
     local Frame = Instance.new("Frame")
     Frame.Size = UDim2.new(1, -10, 0, 34)
     Frame.BackgroundColor3 = Color3.new(1, 0.85, 0.9)
     Frame.BackgroundTransparency = 0.3
     Frame.Parent = ScrollFrame
-    
     local FCorner = Instance.new("UICorner")
     FCorner.CornerRadius = UDim.new(0, 8)
     FCorner.Parent = Frame
-    
     local Label = Instance.new("TextLabel")
     Label.Size = UDim2.new(0.6, 0, 1, 0)
     Label.Position = UDim2.new(0, 10, 0, 0)
@@ -349,7 +319,6 @@ local function CreateToggleButton(text, callback)
     Label.TextXAlignment = Enum.TextXAlignment.Left
     Label.Font = Enum.Font.GothamMedium
     Label.Parent = Frame
-    
     local ToggleBtn = Instance.new("TextButton")
     ToggleBtn.Size = UDim2.new(0, 55, 0, 28)
     ToggleBtn.Position = UDim2.new(1, -62, 0.5, -14)
@@ -359,11 +328,9 @@ local function CreateToggleButton(text, callback)
     ToggleBtn.TextSize = 13
     ToggleBtn.Font = Enum.Font.GothamBold
     ToggleBtn.Parent = Frame
-    
     local TCorner = Instance.new("UICorner")
     TCorner.CornerRadius = UDim.new(0, 14)
     TCorner.Parent = ToggleBtn
-    
     local state = false
     ToggleBtn.MouseButton1Click:Connect(function()
         state = not state
@@ -378,13 +345,10 @@ local function ShowPlayerList()
     for _, child in pairs(ScrollFrame:GetChildren()) do
         child:Destroy()
     end
-    
     CreateActionButton("◀ НАЗАД", function()
         CreateMainMenu()
     end)
-    
     CreateSection("ВЫБЕРИТЕ ИГРОКА")
-    
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Player then
             local role = GetRole(player)
@@ -396,61 +360,46 @@ local function ShowPlayerList()
     end
 end
 
--- === МЕНЮ ДЕЙСТВИЙ С ИГРОКОМ ===
 local function ShowPlayerActions(player)
     for _, child in pairs(ScrollFrame:GetChildren()) do
         child:Destroy()
     end
-    
     CreateActionButton("◀ НАЗАД", function()
         ShowPlayerList()
     end)
-    
     CreateSection("ДЕЙСТВИЯ С " .. player.Name)
-    
-    CreateActionButton("💫 Флинг игрока", function()
-        FlingPlayer(player)
-    end)
-    
+    CreateActionButton("💫 Флинг игрока", function() FlingPlayer(player) end)
     CreateActionButton("🔄 Телепорт к игроку", function()
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             RootPart.CFrame = player.Character.HumanoidRootPart.CFrame + Vector3.new(0, 3, 0)
             Notify("🌸 Телепорт к " .. player.Name, 2)
         end
     end)
-    
     CreateActionButton("📥 Призвать игрока", function()
         if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
             player.Character.HumanoidRootPart.CFrame = RootPart.CFrame + Vector3.new(0, 3, 0)
             Notify("🌸 Призван " .. player.Name, 2)
         end
     end)
-    
     CreateActionButton("💀 Убить игрока", function()
         if player.Character and player.Character:FindFirstChild("Humanoid") then
             player.Character.Humanoid.Health = 0
             Notify("🌸 " .. player.Name .. " убит(а)", 2)
         end
     end)
-    
     CreateActionButton("❤️ Вылечить игрока", function()
         if player.Character and player.Character:FindFirstChild("Humanoid") then
             player.Character.Humanoid.Health = player.Character.Humanoid.MaxHealth
             Notify("🌸 " .. player.Name .. " вылечен(а)", 2)
         end
     end)
-    
-    CreateActionButton("👤 Вселиться в игрока", function()
-        PossessPlayer(player)
-    end)
-    
+    CreateActionButton("👤 Вселиться в игрока", function() PossessPlayer(player) end)
     CreateActionButton("❄️ Заморозить", function()
         if player.Character and player.Character:FindFirstChild("Humanoid") then
             player.Character.Humanoid.WalkSpeed = 0
             Notify("🌸 " .. player.Name .. " заморожен(а)", 2)
         end
     end)
-    
     CreateActionButton("🔥 Разморозить", function()
         if player.Character and player.Character:FindFirstChild("Humanoid") then
             player.Character.Humanoid.WalkSpeed = 16
@@ -461,14 +410,11 @@ end
 
 -- === ГЛАВНОЕ МЕНЮ ===
 function CreateMainMenu()
-    -- Очищаем старые кнопки
     for _, child in pairs(ScrollFrame:GetChildren()) do
         child:Destroy()
     end
-    
-    -- РАЗДЕЛ: ПЕРЕМЕЩЕНИЕ
+
     CreateSection("ПЕРЕМЕЩЕНИЕ")
-    
     CreateToggleButton("✈️ Полет", function(state)
         flyEnabled = state
         if flyEnabled then
@@ -486,12 +432,10 @@ function CreateMainMenu()
             Notify("🌸 Полет выключен", 2)
         end
     end)
-    
     CreateToggleButton("🔮 Ноклип", function(state)
         noclipEnabled = state
         Notify(noclipEnabled and "🌸 Ноклип включён" or "🌸 Ноклип выключен", 2)
     end)
-    
     CreateToggleButton("🧱 Хождение по стенам", function(state)
         wallEnabled = state
         if wallEnabled then
@@ -504,10 +448,8 @@ function CreateMainMenu()
             Notify("🌸 Хождение по стенам выключено", 2)
         end
     end)
-    
-    -- РАЗДЕЛ: ИГРОВЫЕ РЕЖИМЫ
+
     CreateSection("ИГРОВЫЕ РЕЖИМЫ")
-    
     CreateToggleButton("🛡️ Режим Бога", function(state)
         godEnabled = state
         if godEnabled then
@@ -520,7 +462,6 @@ function CreateMainMenu()
             Notify("🌸 Режим Бога выключен", 2)
         end
     end)
-    
     CreateToggleButton("👻 Невидимость", function(state)
         invisEnabled = state
         for _, part in pairs(Character:GetDescendants()) do
@@ -530,7 +471,6 @@ function CreateMainMenu()
         end
         Notify(invisEnabled and "🌸 Невидимость включена" or "🌸 Невидимость выключена", 2)
     end)
-    
     CreateToggleButton("👁️ ESP с ролями", function(state)
         espEnabled = state
         if espEnabled then
@@ -546,10 +486,8 @@ function CreateMainMenu()
             Notify("🌸 ESP выключен", 2)
         end
     end)
-    
-    -- РАЗДЕЛ: ОРУЖИЕ / ПРЕДМЕТЫ
+
     CreateSection("ОРУЖИЕ / ПРЕДМЕТЫ")
-    
     CreateActionButton("🗡️ Бросок ножа", function()
         local knife = Instance.new("Tool")
         knife.Name = "Knife"
@@ -567,7 +505,6 @@ function CreateMainMenu()
         knife.Parent = Player.Backpack
         Notify("🌸 Нож создан! ✨", 2)
     end)
-    
     CreateActionButton("🔨 Дать молоток", function()
         local hammer = Instance.new("Tool")
         hammer.Name = "Hammer"
@@ -584,7 +521,6 @@ function CreateMainMenu()
         weld.Parent = handle
         hammer.Parent = Player.Backpack
         Notify("🌸 Молоток получен! 🛠️", 2)
-        
         hammer.Activated:Connect(function()
             if buildMode then
                 local part = Instance.new("Part")
@@ -601,14 +537,11 @@ function CreateMainMenu()
             end
         end)
     end)
-    
-    -- РАЗДЕЛ: ДЕЙСТВИЯ С ИГРОКАМИ
+
     CreateSection("ДЕЙСТВИЯ С ИГРОКАМИ")
-    
     CreateActionButton("👥 ВЫБРАТЬ ИГРОКА", function()
         ShowPlayerList()
     end)
-    
     CreateActionButton("💥 Флинг всех", function()
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= Player then
@@ -618,11 +551,9 @@ function CreateMainMenu()
         end
         Notify("🌸 Все игроки улетели! 🌸", 2)
     end)
-    
     CreateActionButton("🎯 Убить убийцу", function()
         KillKiller()
     end)
-    
     CreateActionButton("🔍 Телепорт к убийце", function()
         local killer = FindKiller()
         if killer and killer.Character and killer.Character:FindFirstChild("HumanoidRootPart") then
@@ -632,15 +563,12 @@ function CreateMainMenu()
             Notify("🌸 Убийца не найден!", 2)
         end
     end)
-    
-    -- РАЗДЕЛ: НАСТРОЙКИ ИГРЫ
+
     CreateSection("НАСТРОЙКИ ИГРЫ")
-    
     CreateActionButton("🏃 Скорость 50", function()
         Humanoid.WalkSpeed = 50
         Notify("🌸 Скорость: 50", 2)
     end)
-    
     CreateActionButton("📊 Показать роли", function()
         for _, player in pairs(Players:GetPlayers()) do
             if player ~= Player then
@@ -648,12 +576,10 @@ function CreateMainMenu()
             end
         end
     end)
-    
     CreateToggleButton("🔨 Режим постройки", function(state)
         buildMode = state
         Notify(buildMode and "🌸 Режим постройки включён" or "🌸 Режим постройки выключен", 2)
     end)
-    
     CreateActionButton("🧹 Очистить постройки", function()
         for _, part in pairs(buildParts) do
             part:Destroy()
@@ -661,38 +587,31 @@ function CreateMainMenu()
         buildParts = {}
         Notify("🌸 Постройки очищены 🧹", 2)
     end)
-    
-    -- ДОПОЛНИТЕЛЬНО
+
     CreateSection("ДОПОЛНИТЕЛЬНО")
-    
     CreateToggleButton("🪙 Авто-фарм монет", function(state)
         autoFarmCoins = state
         Notify(autoFarmCoins and "🌸 Фарм монет включён" or "🌸 Фарм монет выключен", 2)
     end)
-    
     CreateToggleButton("⚡ Авто-убийство", function(state)
         autoKillEnabled = state
         Notify(autoKillEnabled and "🌸 Авто-убийство включено" or "🌸 Авто-убийство выключено", 2)
     end)
-    
-    -- ПОМОЩЬ
+
     CreateSection("ПОМОЩЬ")
-    
     CreateActionButton("❓ Список функций", function()
         Notify("🌸 Все функции в меню! Нажимайте кнопки.", 3)
     end)
-    
-    -- ИНФОРМАЦИЯ
+
+    -- Информация внизу
     local InfoFrame = Instance.new("Frame")
     InfoFrame.Size = UDim2.new(1, -10, 0, 45)
     InfoFrame.BackgroundColor3 = Color3.new(1, 0.8, 0.85)
     InfoFrame.BackgroundTransparency = 0.2
     InfoFrame.Parent = ScrollFrame
-    
     local InfoCorner = Instance.new("UICorner")
     InfoCorner.CornerRadius = UDim.new(0, 8)
     InfoCorner.Parent = InfoFrame
-    
     local InfoLabel = Instance.new("TextLabel")
     InfoLabel.Size = UDim2.new(1, 0, 1, 0)
     InfoLabel.BackgroundTransparency = 1
@@ -706,7 +625,6 @@ end
 
 -- === ЛОГИКА РАБОТЫ ===
 
--- Полет
 RunService.Heartbeat:Connect(function()
     if flyEnabled and bodyVelocity and bodyGyro then
         local moveDirection = Vector3.new(0, 0, 0)
@@ -716,7 +634,6 @@ RunService.Heartbeat:Connect(function()
         if UserInputService:IsKeyDown(Enum.KeyCode.D) then moveDirection = moveDirection + RootPart.CFrame.RightVector end
         if UserInputService:IsKeyDown(Enum.KeyCode.Space) then moveDirection = moveDirection + Vector3.new(0, 1, 0) end
         if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) then moveDirection = moveDirection - Vector3.new(0, 1, 0) end
-        
         if moveDirection.Magnitude > 0 then
             bodyVelocity.Velocity = moveDirection.Unit * flySpeed
         else
@@ -726,7 +643,6 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Ноклип
 RunService.Heartbeat:Connect(function()
     if noclipEnabled and Character then
         for _, part in pairs(Character:GetDescendants()) do
@@ -737,7 +653,6 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- ESP
 RunService.Heartbeat:Connect(function()
     if espEnabled then
         for _, player in pairs(Players:GetPlayers()) do
@@ -749,7 +664,6 @@ RunService.Heartbeat:Connect(function()
                     local nameTag = espBoxes[player][2]
                     box.Adornee = player.Character.HumanoidRootPart
                     nameTag.Adornee = player.Character:FindFirstChild("Head")
-                    
                     local label = nameTag:FindFirstChild("TextLabel")
                     if label then
                         local role = GetRole(player)
@@ -762,7 +676,6 @@ RunService.Heartbeat:Connect(function()
     end
 end)
 
--- Авто-убийство
 task.spawn(function()
     while true do
         task.wait(1)
@@ -771,4 +684,34 @@ task.spawn(function()
             if killer and killer.Character and killer.Character:FindFirstChild("Humanoid") then
                 if killer.Character.Humanoid.Health > 0 then
                     killer.Character.Humanoid.Health = 0
-                    Not
+                    Notify("🌸 Убийца убит автоматически! ⚡", 2)
+                end
+            end
+        end
+    end
+end)
+
+task.spawn(function()
+    while true do
+        task.wait(2)
+        if autoFarmCoins then
+            FarmCoins()
+        end
+    end
+end)
+
+-- === ОТКРЫТИЕ/ЗАКРЫТИЕ ===
+FloatingButton.MouseButton1Click:Connect(function()
+    local isOpen = MainFrame.Visible
+    if not isOpen then
+        MainFrame.Visible = true
+        FloatingButton.Visible = false
+    else
+        MainFrame.Visible = false
+        FloatingButton.Visible = true
+    end
+end)
+
+-- === ЗАПУСК ===
+CreateMainMenu()
+Notify("🌸 MOD MENU загружен! Нажмите на цветочек 🌸", 3)
