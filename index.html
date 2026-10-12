@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LuaHub — Скрипты для Roblox</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ФОН -->
+    <div class="bg-animation"></div>
+    
+    <!-- ХЕДЕР -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">⚡</span>
+            <span class="logo-text">Lua<span class="accent">Hub</span></span>
+        </div>
+        <nav class="nav">
+            <a href="#home">Главная</a>
+            <a href="#scripts">Скрипты</a>
+            <a href="#about">О нас</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+    </header>
+
+    <!-- ГЛАВНЫЙ БЛОК -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Скрипты для <span class="gradient-text">Roblox</span></h1>
+            <p>Лучшие рабочие скрипты для Murder Mystery 2, Arsenal, Blox Fruits и других игр</p>
+            <div class="hero-buttons">
+                <button class="btn-primary" onclick="scrollToScripts()">Смотреть скрипты</button>
+                <button class="btn-secondary" onclick="showGuide()">Как использовать</button>
+            </div>
+        </div>
+        <div class="hero-stats">
+            <div class="stat">
+                <h3 id="scriptCount">0</h3>
+                <p>Скриптов</p>
+            </div>
+            <div class="stat">
+                <h3>10K+</h3>
+                <p>Пользователей</p>
+            </div>
+            <div class="stat">
+                <h3>24/7</h3>
+                <p>Обновления</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФИЛЬТРЫ -->
+    <section class="filters" id="scripts">
+        <h2>📜 Список скриптов</h2>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Поиск скрипта..." oninput="filterScripts()">
+        </div>
+        <div class="categories">
+            <button class="cat-btn active" onclick="filterCategory('all', this)">Все</button>
+            <button class="cat-btn" onclick="filterCategory('mm2', this)">Murder Mystery 2</button>
+            <button class="cat-btn" onclick="filterCategory('arsenal', this)">Arsenal</button>
+            <button class="cat-btn" onclick="filterCategory('admin', this)">Admin</button>
+        </div>
+    </section>
+
+    <!-- КАРТОЧКИ СКРИПТОВ -->
+    <section class="scripts-grid" id="scriptsGrid">
+        <!-- Заполняется через JavaScript -->
+    </section>
+
+    <!-- О НАС -->
+    <section class="about" id="about">
+        <h2>О LuaHub</h2>
+        <p>Мы собираем только рабочие и проверенные скрипты для Roblox. Все скрипты протестированы и безопасны.</p>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔒</div>
+                <h3>Безопасно</h3>
+                <p>Все скрипты проверены</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>Быстро</h3>
+                <p>Мгновенная загрузка</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🔄</div>
+                <h3>Актуально</h3>
+                <p>Обновляем каждый день</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ФУТЕР -->
+    <footer class="footer" id="contact">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h4>LuaHub</h4>
+                <p>Скрипты для Roblox 2026</p>
+            </div>
+            <div class="footer-col">
+                <h4>Ссылки</h4>
+                <a href="#home">Главная</a>
+                <a href="#scripts">Скрипты</a>
+                <a href="#about">О нас</a>
+            </div>
+            <div class="footer-col">
+                <h4>Соцсети</h4>
+                <a href="#">Discord</a>
+                <a href="#">Telegram</a>
+                <a href="#">YouTube</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 LuaHub. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- МОДАЛЬНОЕ ОКНО -->
+    <div class="modal" id="scriptModal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Скрипт</h2>
+            <p id="modalDesc"></p>
+            <div class="code-box">
+                <pre><code id="modalCode"></code></pre>
+                <button class="copy-btn" onclick="copyCode()">📋 Копировать</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
