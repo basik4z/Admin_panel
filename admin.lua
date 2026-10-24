@@ -1,58 +1,43 @@
-_G.LitEnergyFarm = true -- Чтобы выключить, замените true на false и перезапустите
+-- === НАСТРОЙКИ ===
+local webhookURL = "https://discord.com/api/webhooks/1562305193935245345/gHzqEtzySHK0jSlBPPjQErOYKh8DeOPbEIh3KvL3pfQpnbHaM_j8ur2UnLuR5RZcjCC3"
+local sendInterval = 60 -- Отправлять каждую минуту
+local scriptName = "desin by scriptobus" -- Ваше название скрипта
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
--- Функция поиска фабрики (Тайкуна) игрока
-local function getMyTycoon()
-    if workspace:FindFirstChild("Tycoons") then
-        return workspace.Tycoons:FindFirstChild(LocalPlayer.Name .. "'s Tycoon") 
-            or workspace.Tycoons:FindFirstChild(LocalPlayer.Name)
+-- Функция получения монет
+local function getMyCandies()
+    local player = game.Players.LocalPlayer
+    local leaderstats = player:FindFirstChild("leaderstats")
+    if leaderstats then
+        local candyStat = leaderstats:FindFirstChild("Candy") or leaderstats:FindFirstChild("Candies") or leaderstats:FindFirstChild("Coins")
+        if candyStat then return candyStat.Value end
     end
-    return nil
+    return 0 
 end
 
--- 1. СБОР ДЕНЕГ (Персонаж быстро прыгает по монетам)
+-- Функция отправки простого текста
+local function sendToDiscord(candyAmount)
+    local HttpService = game:GetService("HttpService")
+    
+    -- Формируем простой текст
+    local messageText = "🍭 **Candy:** " .. tostring(candyAmount) .. 
+                        "\n👤 **user:** " .. game.Players.LocalPlayer.DisplayName ..
+                        "\n\n*Powered by " .. scriptName .. "*"
+    
+    -- Упаковываем в JSON
+    local data = {
+        ["content"] = messageText
+    }
+    
+    pcall(function()
+        HttpService:PostAsync(webhookURL, HttpService:JSONEncode(data), Enum.HttpContentType.ApplicationJson)
+    end)
+end
+
+-- Запуск цикла
 task.spawn(function()
-    while _G.LitEnergyFarm do
-        task.wait(0.4)
-        pcall(function()
-            local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if not hrp then return end
-            
-            for _, v in pairs(workspace:GetChildren()) do
-                -- Проверяем капли, деньги или объекты с зоной касания
-                if v.Name == "CashPickup" or v.Name == "MoneyDrop" or v:FindFirstChild("TouchInterest") then
-                    hrp.CFrame = v.CFrame + Vector3.new(0, 1, 0)
-                    task.wait(0.1)
-                end
-            end
-        end)
+    while true do
+        local candies = getMyCandies()
+        sendToDiscord(candies)
+        task.wait(sendInterval)
     end
 end)
-
--- 2. ПОКУПКА КНОПОК И УЛУЧШЕНИЙ
-task.spawn(function()
-    while _G.LitEnergyFarm do
-        task.wait(0.6)
-        pcall(function()
-            local tycoon = getMyTycoon()
-            local hrp = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("HumanoidRootPart")
-            if not tycoon or not hrp then return end
-            
-            if tycoon:FindFirstChild("Buttons") then
-                for _, button in pairs(tycoon.Buttons:GetChildren()) do
-                    -- Находим верхнюю часть кнопки, на которую нужно наступить
-                    local part = button:FindFirstChild("Head") or button:FindFirstChild("TouchPad") or button:FindFirstChild("Part")
-                    if part and part.Transparency < 1 then
-                        -- Встаем прямо на кнопку, чтобы игра засчитала покупку
-                        hrp.CFrame = part.CFrame + Vector3.new(0, 1, 0)
-                        task.wait(0.3)
-                    end
-                end
-            end
-        end)
-    end
-end)
-
-print("[LIT ENERGY] Новый скрипт запущен!")
